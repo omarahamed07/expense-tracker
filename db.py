@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 DB_NAME = "expense.db"
 
@@ -17,5 +18,16 @@ def init_db():
     date TEXT NOT NULL
     )
     """)
+    conn.commit()
+    conn.close()
+    
+def add_expense(amount, category, note=None):
+    date = datetime.date.today().isoformat()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO expenses (amount, category, note, date) VALUES (?, ?, ?, ?)",
+        (amount, category, note, date),
+    )
     conn.commit()
     conn.close()
