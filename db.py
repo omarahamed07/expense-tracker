@@ -21,8 +21,10 @@ def init_db():
     conn.commit()
     conn.close()
     
-def add_expense(amount, category, note=None):
-    date = datetime.date.today().isoformat()
+def add_expense(amount, category, note=None, date=None):
+    if amount <= 0:
+        raise ValueError("Amount must be greater than 0")
+    date = date or datetime.date.today().isoformat()
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
@@ -33,6 +35,7 @@ def add_expense(amount, category, note=None):
     conn.commit()
     conn.close()
     return new_id
+
 def list_expenses(category=None, month=None):
     query = "SELECT id, amount, category, note, date FROM expenses"
     conditions = []
